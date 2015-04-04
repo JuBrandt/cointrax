@@ -3,9 +3,9 @@ Cointrax
 
 Cointrax is a Django application which allows visitors to register for an
 event, product or service and pay with Bitcoin. Each registrant is assigned a
-unique Bitcoin address for payment. Registration information, includding the
-unique Bitcoin address, are stored in a database. It includes a report of
-people who have registered and their payment status.
+unique Bitcoin address for payment. Registration information, including the
+unique Bitcoin address, is stored in a database. The application includes a
+report of people who have registered and their payment status.
 
 
 Motivation
@@ -30,7 +30,8 @@ If you have not done so, create a Python virtual environment and install
 Django. Create a Django project; cointrax will be an application within this
 project.
 
-Copy the cointrax directory into your Django project directory.
+Copy the cointrax directory into your Django project directory, or clone this
+repository there using the `git clone` command.
 
 Add the following lines to the INSTALLED_APPS section in *settings.py*:
 
@@ -104,6 +105,7 @@ screen.
 
 Reports
 -------
+
 */cointrax/address-report/* lists all unused Bitcoin addresses in the
 *PaymentAddress* table.
 
@@ -113,3 +115,11 @@ addresses.
 
 To view these reports you must be authenticated and a member of the
 *managers* group.
+
+
+Note
+----
+
+Cointrax queries [blockchain.info](https://blockchain.info) for transaction
+and price information. If you expect a high volume of transactions, you should
+[request a blockchain.info API key](https://blockchain.info/api/api_create_code).
