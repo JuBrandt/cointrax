@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>Available Addresses</h3>
+
+{% if available_addresses.count == 1 %}
+<p>There is one addresses available.</p>
+{% else %}
+<p>There are {{ available_addresses.count }} addresses available.</p>
+{% endif %}
+
+<p>
+{% for address in available_addresses %}
+{{ address.btc_address }}<br />
+{% endfor %}
+</p>
+{% endblock %}

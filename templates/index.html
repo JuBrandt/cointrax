@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-7">
+    <h3>Bitcoin Payment Form</h3>
+    <p>Please enter your name below and the amount you are paying in USD.
+    Click the <em>Calculate BTC</em> button at the bottom of the page to show the
+    corresponding value in Bitcoin (BTC), based on the current exchange rate per
+    <a href="https://markets.blockchain.info" target="_blank">blockchain.info</a>.
+    If you include your email address you'll receive an email with details
+    about your payment.</p>
+
+    <p>
+    {% if event_name %}
+    Please enter the same name you used on the {{ event_name}} registration
+    form, so we can associate your payment with your registration.
+    {% endif %}
+    On the next page you will see a unique Bitcoin address to
+    send your payment to.</p>
+
+    {% include "contact.html" %}
+
+    <form action="{% url 'index' %}" method="post" role="form">
+      {% csrf_token %}
+      {% bootstrap_form_errors form type='non_fields' %}
+      {% bootstrap_field form.full_name %}
+      {% bootstrap_field form.email_address %}
+
+      <div class="form-group form-horizontal">
+        {{ form.captcha.errors }}
+        <span><strong>Solve this problem:</strong> </span>
+        <label class="control-label" for="{{ form.captcha.id_for_label }}"></label>
+        {{ form.captcha }}
+      </div>
+
+      {% bootstrap_field form.btc_price %}
+      {% bootstrap_field form.payment_usd %}
+      <p id="payment_btc"><button id="calculate_btc" type="button" class="btn btn-default">Calculate BTC</button></p>
+      <button type="submit" class="btn btn-primary">Next</button>
+    </form>
+  </div>
+  <br />
+
+  <div class="col-md-5">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Current Price</h3>
+      </div>
+      <div class="panel-body">
+        <p id="btc_price">Retrieving price ...</p>
+        <p id="btc_timestamp"></p>
+
+        <p>Source:
+        <a href="https://blockchain.info/ticker" target="_blank">blockchain.info</a>
+        (JSON)</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block pagescripts %}
+<script>
+  var price = 0;
+
+  $( document ).ready(function() {
+    // Give focus to the full name field.
+    $('#id_full_name').focus();
+
+    // Calculate the BTC amount when the USD field changes.
+    $('#id_payment_usd').change(function() {
+      calc_btc();
+    });
+
+    // Calculate the BTC amount on Calculate or Re-calculate button click.
+    $('#calculate_btc').click(function() {
+      calc_btc();
+    });
+  });
+
+  function calc_btc() {
+    // Calculate the BTC amount and round it to 8 digits.
+    payment_btc = $('#id_payment_usd').val() / price;
+    payment_btc = Math.round(payment_btc * 100000000) / 100000000;
+
+    // Calculate the mBTC amount.
+    payment_mbtc = payment_btc * 1000;
+
+    // Display the calculations along with a Re-calculate button.
+    btc_html = '<strong>Payment (BTC):</strong> ' + payment_btc + ' BTC = ' +
+               payment_mbtc + ' mBTC &nbsp' +
+               '<button id="calculate_btc" type="button" class="btn btn-default">Re-calculate BTC</button>';
+    $('#payment_btc').html(btc_html);
+  }
+
+  // Periodically query for the BTC price.
+  (function worker() {
+    $.ajax({
+      url: "{% url 'btcprice' %}",
+      success: function(data) {
+        if (data.successful) {
+          price = data.price;
+          $('#btc_price').html('1 BTC = ' + data.price + ' USD');
+          $('#btc_timestamp').html('Last updated: ' + data.timestamp);
+          $('#id_btc_price').val(price);
+          if ($('#id_payment_usd').val()) {
+            calc_btc();
+          }
+        }
+        else {
+          $('#btc_price').html('Unable to retrieve Bitcoin price');
+          $('#btc_timestamp').html('Last attempt: ' + data.timestamp + '.');
+        }
+      },
+      error: function(data) {
+        $('#btc_price').html('Unable to retrieve Bitcoin price');
+        $('#btc_timestamp').html('Last attempt: ' + data.timestamp + '.');
+      },
+      complete: function() {
+        // Schedule the next request when the current one's complete.
+        setTimeout(worker, 30000);
+      }
+    });
+  })();
+</script>
+{% endblock %}

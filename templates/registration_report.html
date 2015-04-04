@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>Registration Report <small>(newest to oldest)</small></h3>
+
+{% if not registration_infos %}
+  <p>No one has registered.</p>
+{% else %}
+  <table class="table table-responsive">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Email Address</th>
+        <th>USD</th>
+        <th>mBTC</th>
+        <th>Received (mBTC)</th>
+        <th>BTC Price, $</th>
+        <th>Payment Address</th>
+      </tr>
+    </thead>
+    {% for registration_info in registration_infos %}
+    <tr>
+      <td>{{ registration_info.date_added|date:"m/d/Y" }}</td>
+      <td>{{ registration_info.full_name }}</td>
+      <td><a href="mailto:{{ registration_info.email_address }}">{{ registration_info.email_address }}</a></td>
+      <td>{{ registration_info.get_payment_usd_str }}</td>
+      <td>{{ registration_info.get_payment_mbtc_str }}</td>
+      <td {% if registration_info.paid %}class="success"{% else %}class="warning"{% endif %}>{{ registration_info.get_received_mbtc_str }}</td>
+      <td>{{ registration_info.get_btc_price_str }}</td>
+      <td><a href="https://blockchain.info/address/{{ registration_info.btc_address }}" target="_blank">{{ registration_info.btc_address }}</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endif %}
+{% endblock %}

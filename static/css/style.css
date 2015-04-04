@@ -1,0 +1,18 @@
+/* Style sheet for cointrax */
+
+body {
+    padding: 10px;
+}
+
+header {
+    border-bottom: 1px solid gray;
+}
+
+.qrcode {
+    margin: 10px;
+}
+
+ul.errorlist {
+    list-style: none;
+    color: red;
+}

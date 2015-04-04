@@ -1,0 +1,19 @@
+{{ registration.full_name }} registered to pay with Bitcoin. Here are the
+payment details:
+
+Payment (USD): ${{ registration.payment_usd|floatformat:2 }}
+Payment (BTC): {{ payment_btc }} BTC = {{ payment_mbtc }} mBTC
+BTC price at time of registration: ${{ registration.btc_price }}
+Registration date: {{ registration.date_added|date:"m/d/Y H:i" }}
+
+Payment address: {{ registration.btc_address }}
+
+You can go to
+
+    {{ hosturl }}{% url 'address' registration.btc_address %}
+
+to see the status of this payment. You can go to
+
+    {{ hosturl }}{% url 'registration_report' %}
+
+to see the status of all payments.

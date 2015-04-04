@@ -1,0 +1,25 @@
+<body>
+<p>{{ registration.full_name }},</p>
+
+<p>Thanks for registering to pay in Bitcoin for the {{ event_name }}.
+Here are your payment details:</p>
+
+<table>
+    <tr><td>Payment (USD):</td><td>${{ registration.payment_usd|floatformat:2 }}</td></tr>
+    <tr><td>Payment (BTC):</td><td>{{ payment_btc }} BTC = {{ payment_mbtc }} mBTC</td></tr>
+    <tr><td>BTC price at time of registration:</td><td>${{ registration.btc_price }}</td></tr>
+    <tr><td>Registration date:</td><td>{{ registration.date_added|date:"m/d/Y H:i" }}</td></tr>
+</table>
+
+<p>If you have not done so, please make your payment to this address:</p>
+
+<p><strong>{{ registration.btc_address }}</strong></p>
+
+<p>You can also go to
+<a href="{{ hosturl }}{% url 'address' registration.btc_address %}">{{ hosturl }}{% url 'address' registration.btc_address %}</a>
+where you will see a QR code with this address.</p>
+
+{% include "contact.html" %}
+
+<p>Thank you.</p>
+</body>

@@ -1,0 +1,22 @@
+{{ registration.full_name }},
+
+Thanks for registering to pay in Bitcoin for the
+{{ event_name }}. Here are your
+payment details:
+
+Payment (USD): ${{ registration.payment_usd|floatformat:2 }}
+Payment (BTC): {{ payment_btc }} BTC = {{ payment_mbtc }} mBTC
+BTC price at time of registration: ${{ registration.btc_price }}
+Registration date: {{ registration.date_added|date:"m/d/Y H:i" }}
+
+If you have not done so, please make your payment to this address:
+
+{{ registration.btc_address }}
+
+You can also go to
+
+    {{ hosturl }}{% url 'address' registration.btc_address %}
+
+where you will see a QR code with this address.
+
+Thank you.

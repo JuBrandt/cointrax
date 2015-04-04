@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-offset-2 col-md-10">
+      <h3>Login</h3>
+
+      {% if form.errors %}
+        <p class="text-danger">Your username and password didn't match. Please try again.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <form method="post" action="{% url 'django.contrib.auth.views.login' %}"  class="form-horizontal">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_username" class="col-md-2 control-label">Username</label>
+      <div class="col-md-10">
+        <input type="text" class="form-control" id="id_username" name="username" placeholder="Username">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="id_password" class="col-md-2 control-label">Password</label>
+      <div class="col-md-10">
+        <input type="password" class="form-control" id="id_password" name="password" placeholder="Password">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-10">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </div>
+    </div>
+    <input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}/{% endif %}" />
+  </form>
+{% endblock %}
+
+{% block pagescripts %}
+<script>
+  $( document ).ready(function() {
+    // Give focus to the username field.
+    $('#id_username').focus();
+  });
+</script>
+{% endblock %}
