@@ -69,6 +69,56 @@ Apply the database migrations for the cointrax app:
     python manage.py migrate
 
 
+Logging
+-------
+
+Cointrax supports logging, and will log to the `cointrax` logger (the name
+of the application). You could create a directory called *log* and capture
+these log messages to a file called *log/cointrax.log* by adding the following
+to your *settings.py* file. Django messages will be logged to the
+*log/django.log* file.
+
+    # Logging
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '[%(asctime)s] %(levelname)s %(process)d:%(thread)d [%(name)s.%(funcName)s:%(lineno)d] %(message)s',
+                'datefmt': '%Y-%m-%d %H:%M:%S'
+            },
+        },
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+            },
+            'cointrax_file': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': os.path.join(BASE_DIR, 'log/cointrax.log'),
+                'formatter': 'verbose'
+            },
+            'django_file': {
+                'level': 'INFO',
+                'class': 'logging.FileHandler',
+                'filename': os.path.join(BASE_DIR, 'log/django.log'),
+                'formatter': 'verbose'
+            },
+        },
+        'loggers': {
+            'cointrax': {
+                'level': 'DEBUG',
+                'handlers': ['console', 'cointrax_file'],
+            },
+            'django': {
+                'level': 'DEBUG',
+                'handlers': ['console', 'django_file'],
+            }
+        }
+    }
+
+
 Adding Bitcoin Addresses
 ------------------------
 
