@@ -13,19 +13,19 @@
   <div class="col-md-7">
     <h3>Bitcoin Payment Form</h3>
     <p>Please enter your name below and the amount you are paying in USD.
-    Click the <em>Calculate BTC</em> button at the bottom of the page to show the
-    corresponding value in Bitcoin (BTC), based on the current exchange rate per
-    <a href="https://markets.blockchain.info" target="_blank">blockchain.info</a>.
-    After you click <em>Next</em> you'll receive an email with details about
-    your payment.</p>
-
-    <p>
     {% if event_name %}
     Please enter the same name you used on the {{ event_name}} registration
     form, so we can associate your payment with your registration.
     {% endif %}
-    On the next page you will see a unique Bitcoin address to
-    send your payment to.</p>
+    </p>
+
+    <p>
+    Click the <em>Calculate BTC</em> button at the bottom of the page to show the
+    corresponding value in Bitcoin (BTC), based on the current exchange rate per
+    <a href="https://markets.blockchain.info" target="_blank">blockchain.info</a>.
+    Click <em>Next</em> and you will see a unique Bitcoin address to
+    send your payment to, and you'll receive an email confirming your
+    registration.</p>
 
     {% include "contact.html" %}
 
